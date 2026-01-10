@@ -2,6 +2,18 @@
 
 Download transcripts from Fireflies.ai using their GraphQL API.
 
+## Why Use This Tool?
+
+**Download shared meeting transcripts with your free account!**
+
+When someone shares a Fireflies.ai meeting link with you, you can view it on their website but **downloading requires upgrading to a paid account**. This tool lets you download those shared transcripts using just your free Fireflies.ai account and API key.
+
+Perfect for:
+- Downloading transcripts that others have shared with you
+- Batch downloading all your meetings
+- Getting transcripts in multiple formats (TXT, JSON, SRT)
+- Automating transcript backups
+
 ## What Works with Free Account
 
 ✅ **Available:**
@@ -11,46 +23,11 @@ Download transcripts from Fireflies.ai using their GraphQL API.
 - Keywords extraction
 - Action items
 - All transcript metadata
+- **Transcripts shared with you from other accounts**
 
 ❌ **Requires Paid Plan:**
 - Audio file downloads (Pro+ plan)
 - Video file downloads (Business+ plan)
-
-## Quick Start
-
-First, get your Fireflies.ai API key:
-1. Log in to [Fireflies.ai](https://fireflies.ai/)
-2. Go to Settings → Integrations → API
-3. Copy your API key
-
-**Option 1: Use .env file (recommended)**
-```bash
-# Copy the example file
-cp .env.example .env
-
-# Edit .env and add your API key
-nano .env
-
-# Now you can use the script without --api-key flag
-./fireflies.py --list
-
-# Download a specific transcript by URL
-./fireflies.py --url "https://app.fireflies.ai/view/Meeting-Title::TRANSCRIPT_ID_HERE"
-
-# Download all transcripts
-./fireflies.py --all
-```
-
-**Option 2: Use environment variable**
-```bash
-export FIREFLIES_API_KEY="your-api-key-here"
-./fireflies.py --list
-```
-
-**Option 3: Pass API key directly**
-```bash
-./fireflies.py --api-key "your-api-key-here" --list
-```
 
 ## Installation
 
@@ -63,6 +40,30 @@ sudo apt-get install python3-requests
 
 # Make script executable
 chmod +x fireflies.py
+```
+
+## Getting Your API Key
+
+1. Log in to [Fireflies.ai](https://fireflies.ai/)
+2. Go to Settings → Integrations → API
+3. Copy your API key
+
+You can provide your API key in three ways:
+
+**Option 1: .env file (recommended)**
+```bash
+cp .env.example .env
+# Edit .env and add your API key
+```
+
+**Option 2: Environment variable**
+```bash
+export FIREFLIES_API_KEY="your-api-key-here"
+```
+
+**Option 3: Command line**
+```bash
+./fireflies.py --api-key "your-api-key-here" --list
 ```
 
 ## Usage
@@ -86,7 +87,9 @@ Shows all your transcripts with:
 ./fireflies.py --url "https://app.fireflies.ai/view/Meeting-Title::TRANSCRIPT_ID_HERE"
 ```
 
-Copy the URL from your browser and paste it directly.
+Copy the URL from your browser and paste it directly. Works with both URL formats:
+- `https://app.fireflies.ai/view/Title::ID`
+- `https://app.fireflies.ai/view/ID`
 
 ### Download by ID
 
@@ -126,6 +129,25 @@ Available formats:
 
 ```bash
 ./fireflies.py --all --output my_transcripts/
+```
+
+### More Examples
+
+```bash
+# Download specific meeting by ID
+./fireflies.py --id TRANSCRIPT_ID_HERE
+
+# Download shared meeting from URL
+./fireflies.py --url "https://app.fireflies.ai/view/Meeting-Title::TRANSCRIPT_ID_HERE"
+
+# Download all meetings as text files only
+./fireflies.py --all --format txt
+
+# Download all meetings to a specific folder
+./fireflies.py --all --output ~/Documents/meetings/
+
+# Download specific meeting in JSON format
+./fireflies.py --id TRANSCRIPT_ID_HERE --format json
 ```
 
 ## Output Format Examples
@@ -172,56 +194,6 @@ Speaker2: Response here
 ### JSON Format
 Complete structured data including all metadata, speakers, sentences, and summary.
 
-## API Key Configuration
-
-You have three options to provide your API key:
-
-**1. .env file (Recommended)**
-```bash
-cp .env.example .env
-# Edit .env and add your API key
-```
-
-**2. Environment variable**
-```bash
-export FIREFLIES_API_KEY="your-api-key-here"
-```
-
-**3. Command line**
-```bash
-./fireflies.py --api-key "your-api-key-here" --list
-```
-
-### Getting Your API Key
-
-1. Log in to [Fireflies.ai](https://fireflies.ai/)
-2. Navigate to Settings → Integrations → API
-3. Copy your API key
-
-## Examples
-
-```bash
-# Assuming you've set up .env file with your API key
-
-# List all meetings
-./fireflies.py --list
-
-# Download specific meeting by ID
-./fireflies.py --id TRANSCRIPT_ID_HERE
-
-# Download from URL (copied from browser)
-./fireflies.py --url "https://app.fireflies.ai/view/Meeting-Title::TRANSCRIPT_ID_HERE"
-
-# Download all meetings as text files only
-./fireflies.py --all --format txt
-
-# Download all meetings to a specific folder
-./fireflies.py --all --output ~/Documents/meetings/
-
-# Download specific meeting in JSON format
-./fireflies.py --id TRANSCRIPT_ID_HERE --format json
-```
-
 ## File Naming
 
 Downloaded files are automatically named:
@@ -251,9 +223,7 @@ For example:
 ## Notes
 
 - Free account has full access to transcript text and AI summaries
+- Works with transcripts shared with you from other accounts
 - Audio/video downloads require paid plans
-- The script handles both URL formats:
-  - `https://app.fireflies.ai/view/Title::ID`
-  - `https://app.fireflies.ai/view/ID`
 - Rate limits may apply (not documented for free tier)
 - All timestamps are in your local timezone
