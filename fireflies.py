@@ -119,7 +119,9 @@ class FirefliesClient:
                 # Write header
                 f.write(f"Title: {transcript['title']}\n")
                 f.write(f"Date: {datetime.fromtimestamp(transcript['date']/1000).strftime('%Y-%m-%d %H:%M:%S')}\n")
-                f.write(f"Duration: {transcript['duration']:.2f} seconds\n")
+                # Fireflies reports `duration` in MINUTES (measured 2026-09-11: a
+                # 47-minute call carries 48.42; a 62-minute one carries 63.41).
+                f.write(f"Duration: {transcript['duration']:.2f} minutes\n")
                 f.write(f"URL: {transcript['transcript_url']}\n")
                 f.write("\n" + "="*80 + "\n\n")
 
@@ -274,7 +276,7 @@ def list_transcripts(client: FirefliesClient):
 
     for t in transcripts:
         date_str = datetime.fromtimestamp(t['date']/1000).strftime('%Y-%m-%d %H:%M')
-        duration_min = t['duration'] / 60 if t['duration'] else 0
+        duration_min = t['duration'] or 0   # already minutes — dividing by 60 printed a 47-min call as 0.8
         print(f"  {t['id']}")
         print(f"    Title: {t['title']}")
         print(f"    Date: {date_str}")
